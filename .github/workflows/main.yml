@@ -2,27 +2,27 @@ name: CD
 
 on:
     push:
-     branches: (main]
+     branches: [main]
      
 jobs:
    build:
     runs-on: ubuntu-latest 
     steps:
       - name: connect to server and deploy changes 
-        uses: appleboy/ssh-action@v1.0.o
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          host: S{{ secrets.HOST 3)
+          host: ${{ secrets.HOST }}
           username: root
-          password: Stf secrets.PASS 3)
+          password: ${{ secrets.PASS }}
           port: 22
-          script:
-           pm2 stoprakhmatulloh.uz
+          script: |
+           pm2 stop rakhmatulloh.uz
            cd rakhmatulloh.uz/ 
            git pull origin main 
            rm -rf ./build 
            rm -rf /var/www/rakhmatulloh.uz
-           mkair /var/www/rakhmatulloh.uz
-           прm i
+           mkdir /var/www/rakhmatulloh.uz
+           npm i
            npm run build 
-           cp -rf ./build/* /var/ww/rakhmatulloh.uz
+           cp -rf ./build/* /var/www/rakhmatulloh.uz
            pm2 restart rakhmatulloh.uz
