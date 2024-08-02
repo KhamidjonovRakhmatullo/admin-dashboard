@@ -8,7 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: connect to server and deploy changes
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Connect to server and deploy changes
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.HOST }}
@@ -16,12 +19,37 @@ jobs:
           password: ${{ secrets.PASS }}
           port: 22
           script: |
-            cd admin-dashboard/
-            git pull origin main
-            rm -rf ./build
-            rm -rf /var/www/rakhmatulloh.uz
-            mkdir /var/www/rakhmatulloh.uz
-            npm i
-            npm run build
-            cp -rf ./build/* /var/www/rakhmatulloh.uz
-            pm2 restart rakhmatulloh.uz
+            # Stop the PM2 process
+            pm2 stop rakhmatulloh.uz || exit 1
+
+            # Navigate to project directory
+            cd /root/admin-dashboard || exit 1
+
+            # Pull the latest changes
+            git pull origin main || exit 1
+
+            # Clean up old node_modules and build
+            rm -rf node_modules || exit 1
+            rm -rf ./build || exit 1
+
+            # Install dependencies
+            npm install || exit 1
+
+            # Build the project
+            npm run build || exit 1
+
+            # Ensure build directory exists
+            if [ ! -d "./build" ]; then
+              echo "Build directory does not exist. Exiting."
+              exit 1
+            fi
+
+            # Remove old files and create new directory
+            rm -rf /var/www/rakhmatulloh.uz || exit 1
+            mkdir /var/www/rakhmatulloh.uz || exit 1
+
+            # Copy the build files
+            cp -rf ./build/* /var/www/rakhmatulloh.uz || exit 1
+
+            # Restart the PM2 process
+            pm2 restart rakhmatulloh.uz || exit 1
