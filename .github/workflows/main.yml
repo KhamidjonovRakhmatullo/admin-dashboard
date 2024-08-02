@@ -8,10 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Connect to server and deploy changes
+      - name: connect to server and deploy changes
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.HOST }}
@@ -19,37 +16,12 @@ jobs:
           password: ${{ secrets.PASS }}
           port: 22
           script: |
-            # Stop the PM2 process
-            pm2 stop rakhmatulloh.uz || { echo "Failed to stop PM2 process"; exit 1; }
-
-            # Navigate to project directory
-            cd /root/admin-dashboard || { echo "Failed to change directory"; exit 1; }
-
-            # Pull the latest changes
-            git pull origin main || { echo "Failed to pull latest changes"; exit 1; }
-
-            # Clean up old node_modules and build
-            rm -rf node_modules || { echo "Failed to remove node_modules"; exit 1; }
-            rm -rf ./build || { echo "Failed to remove old build"; exit 1; }
-
-            # Install dependencies
-            npm install || { echo "npm install failed"; exit 1; }
-
-            # Build the project
-            npm run build || { echo "npm run build failed"; exit 1; }
-
-            # Ensure build directory exists
-            if [ ! -d "./build" ]; then
-              echo "Build directory does not exist. Exiting."
-              exit 1
-            fi
-
-            # Remove old files and create new directory
-            rm -rf /var/www/rakhmatulloh.uz || { echo "Failed to remove old files"; exit 1; }
-            mkdir /var/www/rakhmatulloh.uz || { echo "Failed to create new directory"; exit 1; }
-
-            # Copy the build files
-            cp -rf ./build/* /var/www/rakhmatulloh.uz || { echo "Failed to copy build files"; exit 1; }
-
-            # Restart the PM2 process
-            pm2 restart rakhmatulloh.uz || { echo "Failed to restart PM2 process"; exit 1; }
+            cd admin-dashboard/
+            git pull origin main
+            rm -rf ./build
+            rm -rf /var/www/rakhmatulloh.uz
+            mkdir /var/www/rakhmatulloh.uz
+            npm i
+            npm run build
+            cp -rf ./build/* /var/www/rakhmatulloh.uz
+            pm2 restart rakhmatulloh.uz
