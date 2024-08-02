@@ -2,7 +2,7 @@ import React from 'react'
 
 const CaravanComponent = () => {
   return (
-    <div>CaravanComponent</div>
+    <div>CaravanComponent.</div>
   )
 }
 
