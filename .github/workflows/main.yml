@@ -6,9 +6,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
-      - name: Connect to server and deploy changes
+      - name: connect to server and deploy changes
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.HOST }}
@@ -16,13 +16,12 @@ jobs:
           password: ${{ secrets.PASS }}
           port: 22
           script: |
-            pm2 stop rakhmatulloh.uz
             cd rakhmatulloh.uz/
-            git pull origin main
+            git pull origin master
             rm -rf ./build
             rm -rf /var/www/rakhmatulloh.uz
             mkdir /var/www/rakhmatulloh.uz
-            npm install
+            npm i
             npm run build
             cp -rf ./build/* /var/www/rakhmatulloh.uz
             pm2 restart rakhmatulloh.uz
