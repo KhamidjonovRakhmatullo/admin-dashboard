@@ -14,7 +14,7 @@ jobs:
           password: ${{ secrets.PASS }}
           port: 22
           script: |
-            cd admin_dashboard/
+            cd admin-dashboard/
             git pull origin main
             rm -rf ./build
             rm -rf /var/www/rakhmatulloh.uz
