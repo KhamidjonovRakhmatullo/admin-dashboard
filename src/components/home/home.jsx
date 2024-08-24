@@ -29,7 +29,7 @@ const HomeComponent = () => {
   return (
     <HomeContainer>
       <HomeTitleWrapper>
-        <Title>Dashboard.</Title>
+        <Title>Dashboard</Title>
         <Text>Dashboard</Text>
       </HomeTitleWrapper>
 
