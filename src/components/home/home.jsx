@@ -30,7 +30,7 @@ const HomeComponent = () => {
     <HomeContainer>
       <HomeTitleWrapper>
         <Title>Dashboard</Title>
-        <Text>Dashboard</Text>
+        <Text>Dashboard.</Text>
       </HomeTitleWrapper>
 
       {/* <HomeBoxWrapper>
